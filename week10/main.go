@@ -46,7 +46,7 @@ if err != nil{
 	return
 }
 
-fmt.Fprintf(w, "Toronto time is %s", torontoTime)
+// fmt.Fprintf(w, "Toronto time is %s", torontoTime)
 
 resp := map[string]string{"Current_Time_Toronto": torontoTime}
 w.Header().Set("Content-Type", "application/json")
@@ -61,3 +61,9 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8015", nil))
 
 }
+
+// docker build -t durpintm/torontotime:v01
+
+// docker run -p 8015:8015 durpintm/torontotime:v01
+
+// docker push durpintm/torontotime:v01
