@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -35,13 +37,27 @@ if(err != nil){
 	return timeInfo.Datetime, nil
 }
 
-func main() {
-	println("Server started")
- data, err:=	getTorontoTime()
+func TorontoTImeHandler(w http.ResponseWriter, r *http.Request){
+
+torontoTime, err:=	getTorontoTime()
 
 if err != nil{
-	println(data)
+	http.Error(w, "Error fetching Toronto time", http.StatusInternalServerError)
+	return
 }
 
- println(data)
+fmt.Fprintf(w, "Toronto time is %s", torontoTime)
+
+resp := map[string]string{"Current_Time_Toronto": torontoTime}
+w.Header().Set("Content-Type", "application/json")
+json.NewEncoder(w).Encode(resp)
+}
+
+
+func main() {
+
+	http.HandleFunc("/api/torontotime", TorontoTImeHandler)
+	fmt.Println("Server started on port 8015!")
+	log.Fatal(http.ListenAndServe(":8015", nil))
+
 }
